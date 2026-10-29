@@ -24,18 +24,23 @@
 ## 🇺🇸 나스닥100 + 주요 ETF(QQQ, SPY, SMH…) + 레버리지/고변동(TQQQ, QLD, SOXL, MSTR, COIN…)
 
 config.json에서 종목·기준값 수정 가능
-실행 시각 (GitHub Actions, 평일)
+# 실행 시각 (GitHub Actions, 평일)
+
 한국: 16:40 KST (장 마감 후)
 미국: 06:40 KST (미국장 마감 후)
 수동 실행: Actions → BNF Signal → Run workflow
-텔레그램 연결 (1회)
+
+# 텔레그램 연결 (1회)
+
 텔레그램에서 @BotFather → /newbot → 봇 이름 정하기 → 토큰 복사
 만든 봇에게 아무 메시지나 보내기
 브라우저로 https://api.telegram.org/bot<토큰>/getUpdates 열기 → "chat":{"id": 숫자 의 숫자가 채팅 ID
 이 저장소 Settings → Secrets and variables → Actions → New repository secret
 TELEGRAM_TOKEN = 봇 토큰
 TELEGRAM_CHAT_ID = 채팅 ID
-간이 백테스트 (참고)
+
+
+# 간이 백테스트 (참고)
 python backtest.py US 5y / python backtest.py KR 5y — 현재 구성종목 기준(생존편향 있음), 수수료 미반영. 20212026 기준 결과: 미국 51건 승률 63%·평균 +3.3%, 한국 105건 승률 56%·평균 +1.1% (평균 보유 57일).
 
 ⚠️ 학습·참고용 신호입니다. 투자 판단과 책임은 본인에게 있습니다.
