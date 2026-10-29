@@ -33,9 +33,13 @@ config.json에서 종목·기준값 수정 가능
 # 텔레그램 연결 (1회)
 
 1 텔레그램에서 @BotFather → /newbot → 봇 이름 정하기 → 토큰 복사
+
 2 만든 봇에게 아무 메시지나 보내기
+
 3 브라우저로 https://api.telegram.org/bot<토큰>/getUpdates 열기 → "chat":{"id": 숫자 의 숫자가 채팅 ID
+
 4 이 저장소 Settings → Secrets and variables → Actions → New repository secret
+
 - TELEGRAM_TOKEN = 봇 토큰
 - TELEGRAM_CHAT_ID = 채팅 ID
 
