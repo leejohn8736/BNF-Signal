@@ -110,7 +110,7 @@ def download(tickers, period="2y"):
     return frames
 
 
-# ---------------------------------------------------------------- 텔레그램
+# ---------------------------------------------------------------- 텔레그램 (토큰 호환성 보완)
 def telegram(text):
     token = os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv("TELEGRAM_TOKEN")
     chat = os.getenv("TELEGRAM_CHAT_ID")
@@ -210,7 +210,6 @@ def run(market):
         print("데이터 없음")
         return
     asof_s = str(asof)
-    already = meta.get("last_alert_date") == asof_s
     msgs = []
 
     # 보유(가상) 포지션 청산 체크
@@ -253,7 +252,7 @@ def run(market):
     # 신규 매수 신호
     open_t = {p["ticker"] for p in positions}
     for b in buys:
-        if b["ticker"] in open_t or already:
+        if b["ticker"] in open_t:
             continue
         positions.append({"ticker": b["ticker"], "name": b["name"], "entry": b["close"],
                           "entry_date": asof_s, "last_checked": asof_s, "stop": b["stop"],
@@ -269,22 +268,22 @@ def run(market):
     flag = "🇰🇷 한국" if market == "KR" else "🇺🇸 미국"
     reg_txt = "상승장(지수>200일선)" if regime == "bull" else "하락장(지수<200일선)"
 
-    if not already:
-        head = f"<b>BNF 신호 {flag} · {asof_s}</b>\n시장: {reg_txt}\n"
-        if msgs:
-            body = "\n\n".join(msgs)
-        else:
-            body = "오늘은 매수/청산 신호가 없습니다."
-        
-        if watch:
-            body += "\n\n🟠 <b>대기 종목</b> (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
-                f"  · {w['name']} ({w['ticker']}) 이격 {w['dev']}% RSI {w['rsi']}" for w in watch[:15])
-                
-        if positions:
-            body += f"\n\n📌 추적 중 {len(positions)}건"
+    # [수정] 이미 전송된 날짜인지 확인하는 already 조건을 제거하여 무조건 전송하도록 함
+    head = f"<b>BNF 신호 {flag} · {asof_s}</b>\n시장: {reg_txt}\n"
+    if msgs:
+        body = "\n\n".join(msgs)
+    else:
+        body = "오늘은 매수/청산 신호가 없습니다."
+    
+    if watch:
+        body += "\n\n🟠 <b>대기 종목</b> (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
+            f"  · {w['name']} ({w['ticker']}) 이격 {w['dev']}% RSI {w['rsi']}" for w in watch[:15])
             
-        if telegram(head + "\n" + body):
-            meta["last_alert_date"] = asof_s
+    if positions:
+        body += f"\n\n📌 추적 중 {len(positions)}건"
+        
+    # 신호 유무와 관계없이 무조건 전송 실행
+    telegram(head + "\n" + body)
 
     # 저장
     rows.sort(key=lambda r: r["dev"])
