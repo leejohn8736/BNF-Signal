@@ -110,17 +110,24 @@ def download(tickers, period="2y"):
     return frames
 
 
-# ---------------------------------------------------------------- 텔레그램
+# ---------------------------------------------------------------- 텔레그램 (토큰 변수명 호환성 보완)
 def telegram(text):
-    token, chat = os.getenv("TELEGRAM_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
+    # TELEGRAM_BOT_TOKEN과 TELEGRAM_TOKEN 둘 다 확인하여 누락 방지
+    token = os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv("TELEGRAM_TOKEN")
+    chat = os.getenv("TELEGRAM_CHAT_ID")
+    
     if not token or not chat:
         print("[텔레그램 미설정] 메시지:\n" + text)
         return False
+    
     for part in [text[i:i + 3800] for i in range(0, len(text), 3800)]:
         try:
             r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage",
                               data={"chat_id": chat, "text": part, "parse_mode": "HTML",
                                     "disable_web_page_preview": "true"}, timeout=20)
+            print(f"📡 텔레그램 응답 상태 코드: {r.status_code}")
+            print(f"📡 텔레그램 응답 상세 내용: {r.text[:200]}")
+            
             if not r.ok:
                 print("텔레그램 전송 실패:", r.status_code, r.text[:200])
                 return False
@@ -273,7 +280,6 @@ def run(market):
         else:
             body = "오늘은 매수/청산 신호가 없습니다."
         
-        # [수정 부분] 신호 유무와 관계없이 대기 종목(watch)이 있으면 메시지에 항상 포함
         if watch:
             body += "\n\n🟠 <b>대기 종목</b> (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
                 f"  · {w['name']} ({w['ticker']}) 이격 {w['dev']}% RSI {w['rsi']}" for w in watch[:15])
@@ -292,7 +298,7 @@ def run(market):
            "buys": buys, "watch": watch, "positions": positions, "history": history[:100],
            "candidates": [r for r in rows if r["stage"] >= 1 or r["dev"] <= -10][:80],
            "count": len(rows)}
-    (DATA_DIR / f"{market.lower()}.json").write_text(json.dumps(out, ensure_ascii=False), "utf-8")
+(DATA_DIR / f"{market.lower()}.json").write_text(json.dumps(out, ensure_ascii=False), "utf-8")
     pos_file.write_text(json.dumps(positions, ensure_ascii=False, indent=1), "utf-8")
     hist_file.write_text(json.dumps(history[:300], ensure_ascii=False, indent=1), "utf-8")
     meta_file.write_text(json.dumps(meta), "utf-8")
