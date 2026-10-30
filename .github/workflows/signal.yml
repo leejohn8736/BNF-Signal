@@ -2,8 +2,8 @@ name: BNF Signal
 
 on:
   schedule:
-    - cron: "40 7 * * 1-5"    # 한국장 마감 후 16:40 KST
-    - cron: "40 21 * * 1-5"   # 미국장 마감 후 06:40 KST(다음날)
+    - cron: "40 7 * * 1-5"    # 한국장 마감 후 16:40 KST (월~금)
+    - cron: "40 21 * * 1-5"   # 미국장 마감 후 06:40 KST (화~토 새벽)
   workflow_dispatch:
     inputs:
       market:
@@ -41,7 +41,8 @@ jobs:
           echo "markets=$M" >> "$GITHUB_OUTPUT"
       - name: Run signals
         env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bnf_signal.py ${{ steps.m.outputs.markets }}
       - name: Commit results
