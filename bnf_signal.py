@@ -4,7 +4,7 @@ BNF 25일선 이격도 역추세 신호 알림 시스템
 - 단계2 대기: + 최근 RSI(14) 과매도(<=30)
 - 매수 신호: 최근 N일 내 이격도·RSI 조건 충족 + 오늘 MACD 히스토그램이 0선 아래→위 전환
 - 청산 추적: 손절(직전 저점) / 익절(25EMA 도달) / 2R 도달 / 보유기간 만료
-사용법: python bnf_signal.py KR   또는   python bnf_signal.py US
+사용법: python bnf_signal.py KR    또는    python bnf_signal.py US
 """
 import json
 import os
@@ -272,11 +272,15 @@ def run(market):
             body = "\n\n".join(msgs)
         else:
             body = "오늘은 매수/청산 신호가 없습니다."
+        
+        # [수정 부분] 신호 유무와 관계없이 대기 종목(watch)이 있으면 메시지에 항상 포함
         if watch:
             body += "\n\n🟠 <b>대기 종목</b> (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
                 f"  · {w['name']} ({w['ticker']}) 이격 {w['dev']}% RSI {w['rsi']}" for w in watch[:15])
+                
         if positions:
             body += f"\n\n📌 추적 중 {len(positions)}건"
+            
         if telegram(head + "\n" + body):
             meta["last_alert_date"] = asof_s
 
