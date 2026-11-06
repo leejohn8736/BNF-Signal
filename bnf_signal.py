@@ -110,7 +110,7 @@ def download(tickers, period="2y"):
     return frames
 
 
-# ---------------------------------------------------------------- 텔레그램 (토큰 호환성 보완)
+# ---------------------------------------------------------------- 텔레그램 (HTML 파싱 에러 방지를 위해 일반 텍스트로 수정)
 def telegram(text):
     token = os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv("TELEGRAM_TOKEN")
     chat = os.getenv("TELEGRAM_CHAT_ID")
@@ -122,8 +122,8 @@ def telegram(text):
     for part in [text[i:i + 3800] for i in range(0, len(text), 3800)]:
         try:
             r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage",
-                              data={"chat_id": chat, "text": part, "parse_mode": "HTML",
-                                    "disable_web_page_preview": "true"}, timeout=20)
+                            data={"chat_id": chat, "text": part,
+                                  "disable_web_page_preview": "true"}, timeout=20)
             if not r.ok:
                 print("텔레그램 전송 실패:", r.status_code, r.text[:200])
                 return False
@@ -225,13 +225,13 @@ def run(market):
         for d_i, r in after.iterrows():
             p["days"] = p.get("days", 0) + 1
             if r["low"] <= p["stop"]:
-                closed = ("🔴 손절", p["stop"], d_i)
+                closed = ("[손절]", p["stop"], d_i)
             elif r["high"] >= r["ema"]:
-                closed = ("🟢 익절(25EMA 도달)", float(r["ema"]), d_i)
+                closed = ("[익절(25EMA 도달)]", float(r["ema"]), d_i)
             elif r["high"] >= p["target_2r"]:
-                closed = ("🟢 익절(2R 도달)", p["target_2r"], d_i)
+                closed = ("[익절(2R 도달)]", p["target_2r"], d_i)
             elif p["days"] >= R["max_hold_days"]:
-                closed = ("⏱ 기간만료", float(r["close"]), d_i)
+                closed = ("[기간만료]", float(r["close"]), d_i)
             if closed:
                 break
         p["last_checked"] = asof_s
@@ -242,8 +242,7 @@ def run(market):
             p.update({"exit": round(px, 4), "exit_date": str(d_i.date()), "result": label,
                       "ret": round(ret, 2)})
             history.insert(0, p)
-            msgs.append(f"{label} <b>{p['name']}</b> ({t})\n"
-                        f"  진입 {fmt_px(p['entry'], market)} → {fmt_px(px, market)} ({ret:+.1f}%)")
+            msgs.append(f"{label} {p['name']} ({t})\n  진입 {fmt_px(p['entry'], market)} → {fmt_px(px, market)} ({ret:+.1f}%)")
         else:
             p["ret_now"] = round((p["last_close"] / p["entry"] - 1) * 100, 2)
             still_open.append(p)
@@ -258,31 +257,29 @@ def run(market):
                           "entry_date": asof_s, "last_checked": asof_s, "stop": b["stop"],
                           "target_ema": b["target_ema"], "target_2r": b["target_2r"], "days": 0})
         msgs.insert(0,
-            f"🟢 <b>매수 신호</b> <b>{b['name']}</b> ({b['ticker']})\n"
+            f"[매수 신호] {b['name']} ({b['ticker']})\n"
             f"  종가 {fmt_px(b['close'], market)} | 이격 최저 {b['dev_min']}% (기준 {b['th']}%)\n"
             f"  RSI 최저 {b['rsi_min']} | MACD히스토 {b['hist_prev']:+.3g}→{b['hist']:+.3g}\n"
             f"  손절 {fmt_px(b['stop'], market)} | 익절① 25EMA {fmt_px(b['target_ema'], market)}"
             f" | 익절② 2R {fmt_px(b['target_2r'], market)}")
 
     watch = sorted([r for r in rows if r["stage"] == 2], key=lambda r: r["dev_min"])
-    flag = "🇰🇷 한국" if market == "KR" else "🇺🇸 미국"
+    flag = "한국" if market == "KR" else "미국"
     reg_txt = "상승장(지수>200일선)" if regime == "bull" else "하락장(지수<200일선)"
 
-    # [수정] 이미 전송된 날짜인지 확인하는 already 조건을 제거하여 무조건 전송하도록 함
-    head = f"<b>BNF 신호 {flag} · {asof_s}</b>\n시장: {reg_txt}\n"
+    head = f"[BNF 신호 {flag} · {asof_s}]\n시장: {reg_txt}\n"
     if msgs:
         body = "\n\n".join(msgs)
     else:
         body = "오늘은 매수/청산 신호가 없습니다."
     
     if watch:
-        body += "\n\n🟠 <b>대기 종목</b> (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
+        body += "\n\n[대기 종목] (이격·RSI 충족, MACD 전환 대기)\n" + "\n".join(
             f"  · {w['name']} ({w['ticker']}) 이격 {w['dev']}% RSI {w['rsi']}" for w in watch[:15])
             
     if positions:
-        body += f"\n\n📌 추적 중 {len(positions)}건"
+        body += f"\n\n[추적 중 {len(positions)}건]"
         
-    # 신호 유무와 관계없이 무조건 전송 실행
     telegram(head + "\n" + body)
 
     # 저장
