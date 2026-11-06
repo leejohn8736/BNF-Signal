@@ -1,1 +1,13 @@
-[]
+[
+ {
+  "ticker": "005090.KS",
+  "name": "SGC에너지",
+  "entry": 32850.0,
+  "entry_date": "2026-11-06",
+  "last_checked": "2026-11-06",
+  "stop": 28900.0,
+  "target_ema": 37475.0413,
+  "target_2r": 40750.0,
+  "days": 0
+ }
+]
