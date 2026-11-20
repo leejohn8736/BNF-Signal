@@ -1,27 +1,16 @@
 [
  {
-  "ticker": "005090.KS",
-  "name": "SGC에너지",
-  "entry": 32850.0,
-  "entry_date": "2026-11-06",
-  "last_checked": "2026-11-06",
-  "stop": 28900.0,
-  "target_ema": 37475.0413,
-  "target_2r": 40750.0,
-  "days": 0
- },
- {
   "ticker": "011070.KS",
   "name": "LG이노텍",
   "entry": 286000.0,
   "entry_date": "2026-11-12",
-  "last_checked": "2026-11-19",
+  "last_checked": "2026-11-20",
   "stop": 254500.0,
   "target_ema": 362653.2293,
   "target_2r": 349000.0,
-  "days": 0,
-  "last_close": 283000.0,
-  "ret_now": -1.05
+  "days": 1,
+  "last_close": 273500.0,
+  "ret_now": -4.37
  },
  {
   "ticker": "007660.KS",
@@ -41,13 +30,13 @@
   "name": "LS",
   "entry": 187300.0,
   "entry_date": "2026-11-12",
-  "last_checked": "2026-11-19",
+  "last_checked": "2026-11-20",
   "stop": 166200.0,
   "target_ema": 217436.5833,
   "target_2r": 229500.0,
-  "days": 0,
-  "last_close": 174200.0,
-  "ret_now": -6.99
+  "days": 1,
+  "last_close": 169500.0,
+  "ret_now": -9.5
  },
  {
   "ticker": "047040.KS",
@@ -93,26 +82,26 @@
   "name": "HD현대일렉트릭",
   "entry": 405000.0,
   "entry_date": "2026-11-12",
-  "last_checked": "2026-11-19",
+  "last_checked": "2026-11-20",
   "stop": 344736.5159,
   "target_ema": 475898.9624,
   "target_2r": 525526.9683,
-  "days": 0,
-  "last_close": 382500.0,
-  "ret_now": -5.56
+  "days": 1,
+  "last_close": 400500.0,
+  "ret_now": -1.11
  },
  {
   "ticker": "079550.KS",
   "name": "LIG디펜스앤에어로스페이스",
   "entry": 351000.0,
   "entry_date": "2026-11-16",
-  "last_checked": "2026-11-19",
+  "last_checked": "2026-11-20",
   "stop": 280000.0,
   "target_ema": 446633.7886,
   "target_2r": 493000.0,
-  "days": 0,
-  "last_close": 351500.0,
-  "ret_now": 0.14
+  "days": 1,
+  "last_close": 358000.0,
+  "ret_now": 1.99
  },
  {
   "ticker": "064760.KQ",
@@ -145,13 +134,13 @@
   "name": "RF머트리얼즈",
   "entry": 27450.0,
   "entry_date": "2026-11-17",
-  "last_checked": "2026-11-19",
+  "last_checked": "2026-11-20",
   "stop": 20550.0,
   "target_ema": 33448.5972,
   "target_2r": 41250.0,
-  "days": 0,
-  "last_close": 28500.0,
-  "ret_now": 3.83
+  "days": 1,
+  "last_close": 26800.0,
+  "ret_now": -2.37
  },
  {
   "ticker": "281820.KS",
@@ -184,6 +173,17 @@
   "stop": 59600.0,
   "target_ema": 87232.5754,
   "target_2r": 106400.0,
+  "days": 0
+ },
+ {
+  "ticker": "499790.KS",
+  "name": "GS피앤엘",
+  "entry": 25050.0,
+  "entry_date": "2026-11-20",
+  "last_checked": "2026-11-20",
+  "stop": 23500.0,
+  "target_ema": 28964.9957,
+  "target_2r": 28150.0,
   "days": 0
  }
 ]

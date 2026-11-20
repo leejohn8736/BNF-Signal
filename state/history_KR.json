@@ -1,1 +1,18 @@
-[]
+[
+ {
+  "ticker": "005090.KS",
+  "name": "SGC에너지",
+  "entry": 32850.0,
+  "entry_date": "2026-11-06",
+  "last_checked": "2026-11-20",
+  "stop": 28900.0,
+  "target_ema": 37475.0413,
+  "target_2r": 40750.0,
+  "days": 2,
+  "last_close": 30700.0,
+  "exit": 37279.0521,
+  "exit_date": "2026-11-10",
+  "result": "[익절(25EMA 도달)]",
+  "ret": 13.48
+ }
+]
